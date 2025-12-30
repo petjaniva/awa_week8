@@ -32,6 +32,12 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, "../public")));
 router.post("/user/register", async (req: Request, res: Response) => {
   const { email, password } = req.body;
+  let username: string;
+  if (req.body.username) {
+    username = req.body.username;
+  } else {
+    username = email.split("@")[0];
+  }
   console.log("user registeration request");
   console.log(req.body);
   if (!email || !password) {
@@ -47,7 +53,7 @@ router.post("/user/register", async (req: Request, res: Response) => {
   const newUser: IUser = new User({
     email: email,
     password: passwordHash,
-    username: email.split("@")[0],
+    username: username,
   });
   try {
     await newUser.save();
