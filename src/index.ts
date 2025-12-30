@@ -42,6 +42,17 @@ router.post(
   checkPasswordStrength(),
   async (req: Request, res: Response) => {
     const { email, password } = req.body;
+    console.log("user registeration request");
+    console.log(req.body);
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required." });
+    }
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(403).json({ email: "Email already in use" });
+    }
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -58,18 +69,7 @@ router.post(
     } else {
       isAdmin = false;
     }
-    console.log("user registeration request");
-    console.log(req.body);
-    if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required." });
-    }
     const passwordHash = bcrypt.hashSync(password, 10);
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(403).json({ email: "Email already in use" });
-    }
     const newUser: IUser = new User({
       email: email,
       password: passwordHash,
