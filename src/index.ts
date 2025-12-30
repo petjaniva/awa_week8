@@ -8,9 +8,10 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { validateToken } from "./validateToken.js";
+import { validateToken, validateAdminToken } from "./validateToken.js";
 import mongoose from "mongoose";
 import { type IUser, User } from "./models/User.js";
+import { type ITopic, Topic } from "./models/Topic.js";
 import {
   sanitazeEmail,
   sanitazeUsername,
@@ -124,6 +125,62 @@ router.post(
       }
     );
     return res.status(200).json({ success: true, token: userToken });
+  }
+);
+router.get("/topics/", (req: Request, res: Response) => {
+  console.log("public topics request");
+  const topics: Array<ITopic> = [];
+  Topic.find()
+    .then((foundTopics) => {
+      foundTopics.forEach((topic) => {
+        topics.push(topic);
+      });
+      return res.status(201).json(topics);
+    })
+    .catch((err) => {
+      console.error("Error fetching topics:", err);
+      return res.status(500).json({ message: "Error fetching topics." });
+    });
+});
+router.post("/topic/", validateToken, async (req: Request, res: Response) => {
+  console.log("create topic request");
+  console.log(req.body);
+  const { name, content, username } = req.body;
+  if (!name || !content || !username) {
+    return res
+      .status(400)
+      .json({ message: "Topic name, content, and username are required." });
+  }
+  const newTopic: ITopic = new Topic({
+    name,
+    content,
+    username,
+  });
+  try {
+    await newTopic.save();
+    return res.status(201).json(newTopic);
+  } catch (error) {
+    console.error("Error saving topic:", error);
+    return res.status(500).json({ message: "Error saving topic." });
+  }
+});
+
+router.delete(
+  "/topic/:id",
+  validateAdminToken,
+  async (req: Request, res: Response) => {
+    console.log("delete topic request");
+    const topicId = req.params.id;
+    try {
+      const deletedTopic = await Topic.findByIdAndDelete(topicId);
+      if (!deletedTopic) {
+        return res.status(404).json({ message: "Topic not found." });
+      }
+      return res.status(200).json({ message: "Topic deleted successfully." });
+    } catch (error) {
+      console.error("Error deleting topic:", error);
+      return res.status(500).json({ message: "Error deleting topic." });
+    }
   }
 );
 
