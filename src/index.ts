@@ -82,7 +82,7 @@ router.post("/user/login", async (req: Request, res: Response) => {
       isAdmin: existingUser.isAdmin,
     },
 
-    process.env.SECRET as string,
+    (process.env.SECRET as string) || "defaultSecret",
     {
       expiresIn: "1h",
     }
