@@ -33,10 +33,16 @@ app.use(express.static(path.join(__dirname, "../public")));
 router.post("/user/register", async (req: Request, res: Response) => {
   const { email, password } = req.body;
   let username: string;
+  let isAdmin: boolean;
   if (req.body.username) {
     username = req.body.username;
   } else {
     username = email.split("@")[0];
+  }
+  if (req.body.isAdmin) {
+    isAdmin = req.body.isAdmin;
+  } else {
+    isAdmin = false;
   }
   console.log("user registeration request");
   console.log(req.body);
@@ -54,6 +60,7 @@ router.post("/user/register", async (req: Request, res: Response) => {
     email: email,
     password: passwordHash,
     username: username,
+    isAdmin: isAdmin,
   });
   try {
     await newUser.save();
