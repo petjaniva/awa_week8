@@ -1,3 +1,4 @@
+import { log } from "console";
 import { type Request, type Response, type NextFunction } from "express";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 
@@ -40,12 +41,17 @@ export const validateAdminToken = (
       token,
       process.env.SECRET || "secretKey"
     ) as jwt.JwtPayload;
+    console.log("Verified admin token:");
+    console.log(verfied);
+
     if (!verfied.isAdmin) {
       return res.status(403).json({ message: "Access denied" });
     }
     req.user = verfied;
     next();
   } catch (error) {
+    console.log("admin token validation error");
+    console.log(error);
     return res.status(401).json({ message: "Invalid token." });
   }
 };

@@ -135,7 +135,7 @@ router.get("/topics/", (req: Request, res: Response) => {
       foundTopics.forEach((topic) => {
         topics.push(topic);
       });
-      return res.status(201).json(topics);
+      return res.status(200).json(topics);
     })
     .catch((err) => {
       console.error("Error fetching topics:", err);
@@ -164,7 +164,7 @@ router.post("/topic/", validateToken, async (req: Request, res: Response) => {
   });
   try {
     await newTopic.save();
-    return res.status(201).json(newTopic);
+    return res.status(200).json(newTopic);
   } catch (error) {
     console.error("Error saving topic:", error);
     return res.status(500).json({ message: "Error saving topic." });
