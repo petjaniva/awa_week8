@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 
 interface ITopic extends mongoose.Document {
-  name: string;
+  title: string;
   content: string;
   username: string;
   createdAt: Date;
 }
 const topicSchema = new mongoose.Schema<ITopic>({
-  name: { type: String, required: true },
+  title: { type: String, required: true },
   content: { type: String, required: true },
   username: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },

@@ -146,19 +146,19 @@ router.post("/topic/", validateToken, async (req: Request, res: Response) => {
   console.log("create topic request");
   console.log(req.body);
   console.log((req as any).user);
-  const { name, content } = req.body;
+  const { title, content } = req.body;
   const username = (req as any).user.username;
   console.log(
     "Username read from req.user.username: " + (req as any).user.username
   );
 
-  if (!name || !content || !username) {
+  if (!title || !content || !username) {
     return res
       .status(400)
       .json({ message: "Topic name, content, and username are required." });
   }
   const newTopic: ITopic = new Topic({
-    name,
+    title,
     content,
     username,
   });
