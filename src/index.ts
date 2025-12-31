@@ -148,6 +148,10 @@ router.post("/topic/", validateToken, async (req: Request, res: Response) => {
   console.log((req as any).user);
   const { name, content } = req.body;
   const username = (req as any).user.username;
+  console.log(
+    "Username read from req.user.username: " + (req as any).user.username
+  );
+
   if (!name || !content || !username) {
     return res
       .status(400)
