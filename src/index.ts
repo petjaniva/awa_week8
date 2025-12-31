@@ -145,7 +145,9 @@ router.get("/topics/", (req: Request, res: Response) => {
 router.post("/topic/", validateToken, async (req: Request, res: Response) => {
   console.log("create topic request");
   console.log(req.body);
-  const { name, content, username } = req.body;
+  console.log((req as any).user);
+  const { name, content } = req.body;
+  const username = (req as any).user.username;
   if (!name || !content || !username) {
     return res
       .status(400)
