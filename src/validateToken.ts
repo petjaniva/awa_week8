@@ -17,7 +17,7 @@ export const validateToken = (
   try {
     const verfied: jwt.JwtPayload = jwt.verify(
       token,
-      process.env.SECRET || "secretKey"
+      process.env.SECRET || "defaultSecret"
     ) as jwt.JwtPayload;
     req.user = verfied;
     next();
