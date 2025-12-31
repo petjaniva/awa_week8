@@ -39,7 +39,7 @@ export const validateAdminToken = (
   try {
     const verfied: jwt.JwtPayload = jwt.verify(
       token,
-      process.env.SECRET || "secretKey"
+      process.env.SECRET || "defaultSecret"
     ) as jwt.JwtPayload;
     console.log("Verified admin token:");
     console.log(verfied);
