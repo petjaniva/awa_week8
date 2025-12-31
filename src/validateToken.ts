@@ -45,7 +45,7 @@ export const validateAdminToken = (
     console.log(verfied);
 
     if (!verfied.isAdmin) {
-      return res.status(403).json({ message: "Access denied" });
+      return res.status(403).json({ message: "Access denied." });
     }
     req.user = verfied;
     next();
